@@ -31,7 +31,7 @@ public class ClienteServicesImpl implements ClienteServices {
 	public Cliente buscarClientePorIdentificacion(String identificacion) {
 
 		return clienteRepository.findByIdentificacion(identificacion)
-				.orElseThrow(null);
+				.orElseThrow(() -> new DataIntegrityViolationException("No se encuentra cliente con la identificación: " + identificacion));
 	}
 
 	@Override

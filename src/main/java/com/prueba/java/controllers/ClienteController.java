@@ -39,13 +39,18 @@ public class ClienteController extends BaseController{
 	  }
 		return ResponseEntity.status(HttpStatus.OK).body(clientes);
 	}
-	  @GetMapping("/identificacion")
+	  @GetMapping("/{identificacion}")
 	    public ResponseEntity<?> buscarClientePorIdentificacion(@PathVariable String identificacion) {
-	        Cliente cliente = clienteServices.buscarClientePorIdentificacion(identificacion);
+
+		  // Encriptar la identificación proporcionada
+		  String identificacionEncriptada = encriptarIdentificacion(identificacion);
+
+
+		  Cliente cliente = clienteServices.buscarClientePorIdentificacion(identificacionEncriptada);
 	        if (cliente != null) {
 	            return ResponseEntity.ok(cliente);
 	        } else {
-	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se encuentra cliente");
+				return ResponseEntity.notFound().build();
 	        }
 	    }
 	
@@ -60,5 +65,12 @@ public class ClienteController extends BaseController{
 			 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se encuentra cliente");
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCliente);
+	}
+
+	private String encriptarIdentificacion(String identificacion) {
+		// Aquí puedes utilizar el método de encriptación que prefieras,
+		// como SHA-256, AES, etc.
+		// Este ejemplo utiliza Base64 como en tu implementación original.
+		return java.util.Base64.getEncoder().encodeToString(identificacion.getBytes());
 	}
 }
